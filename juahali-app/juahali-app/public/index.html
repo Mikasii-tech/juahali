@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JUAHALI | Campus clinic queue by urgency</title>
+    <meta
+      name="description"
+      content="JUAHALI places campus clinic patients in the queue by how urgent their symptoms are, and shows live position and wait time."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="main.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap nav">
+        <a class="logo" href="#top" aria-label="JUAHALI home">
+          <svg width="34" height="34" viewBox="0 0 36 36" aria-hidden="true">
+            <rect width="36" height="36" rx="10" fill="#C4232F" />
+            <path
+              d="M18 10v16M10 18h16"
+              stroke="#fff"
+              stroke-width="3.2"
+              stroke-linecap="round"
+            />
+          </svg>
+          <span>JUAHALI</span>
+        </a>
+        <nav id="nav-menu" class="nav-links" aria-label="Main">
+          <a href="#how">How it works</a>
+          <a href="#fair">Fair queueing</a>
+          <a href="#roles">Who uses it</a>
+          <a class="btn btn-line nav-login" href="login.html">Log in</a>
+        </nav>
+        <button
+          class="nav-toggle"
+          aria-expanded="false"
+          aria-controls="nav-menu"
+          aria-label="Open menu"
+        >
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero wrap">
+        <div class="hero-copy">
+          <h1>Seen by urgency, not by arrival.</h1>
+          <p class="lead">
+            Tell the clinic what is wrong when you check in. JUAHALI places you
+            in the queue by how urgent your care is, then shows exactly where
+            you stand.
+          </p>
+          <div class="actions">
+            <a class="btn btn-green" href="login.html?next=check-in"
+              >Check in now</a
+            >
+            <a class="btn btn-line" href="#how">See how it works</a>
+          </div>
+          <p class="note">
+            Sign in with your school email. If it is life-threatening, go to the
+            clinic desk immediately.
+          </p>
+        </div>
+
+        <div
+          class="board"
+          role="img"
+          aria-label="Sample live queue showing three patients and your place in line"
+        >
+          <div class="board-head">
+            <strong>Live queue</strong><span>Sample data</span>
+          </div>
+          <div class="qrow tier-critical" data-row>
+            <span class="qn">Q-014</span><span class="chip">Critical</span
+            ><span class="status"></span>
+          </div>
+          <div class="qrow tier-urgent" data-row>
+            <span class="qn">Q-015</span><span class="chip">Urgent</span
+            ><span class="status"></span>
+          </div>
+          <div class="qrow tier-routine" data-row>
+            <span class="qn">Q-016</span><span class="chip">Routine</span
+            ><span class="status"></span>
+          </div>
+          <div class="you">
+            <div><small>Your number</small><b>Q-017</b></div>
+            <div class="you-r">
+              <span data-ahead></span><span data-wait></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="how" class="section wrap">
+        <h2>Three steps from symptom to number</h2>
+        <ol class="steps">
+          <li>
+            <span class="num">1</span>
+            <h3>Sign in</h3>
+            <p>
+              Use your school email. Your name and student ID are already filled
+              in.
+            </p>
+          </li>
+          <li>
+            <span class="num">2</span>
+            <h3>Tell us what is wrong</h3>
+            <p>
+              Pick a symptom, then answer a few yes or no questions. You never
+              choose your own severity.
+            </p>
+          </li>
+          <li>
+            <span class="num">3</span>
+            <h3>Watch your place move</h3>
+            <p>
+              See your live position and a wait estimate based on recent
+              consultations.
+            </p>
+          </li>
+        </ol>
+      </section>
+
+      <section id="fair" class="band">
+        <div class="wrap">
+          <h2>A queue that cannot be gamed, and never forgets anyone</h2>
+          <div class="points">
+            <div>
+              <h3>Questions, not labels</h3>
+              <p>
+                Severity comes from your answers, so nobody can jump the line by
+                picking a scarier word.
+              </p>
+            </div>
+            <div>
+              <h3>Red flags go first</h3>
+              <p>
+                A warning-sign answer makes the case critical straight away.
+              </p>
+            </div>
+            <div>
+              <h3>Waiting counts too</h3>
+              <p>
+                The longer you wait, the higher you climb. After a set time you
+                are called next, so nobody is stuck forever.
+              </p>
+            </div>
+            <div>
+              <h3>Every step is logged</h3>
+              <p>Each status change records who made it and when.</p>
+            </div>
+          </div>
+          <p class="pharm">
+            Minor symptom? We may suggest the campus pharmacy to save you a
+            wait. It is only a suggestion, and you can always join the doctor's
+            queue.
+          </p>
+        </div>
+      </section>
+
+      <section id="roles" class="section wrap">
+        <h2>One system, four views</h2>
+        <div class="roles">
+          <div>
+            <h3>Patient</h3>
+            <p>Check in, follow live status and review your visits.</p>
+          </div>
+          <div>
+            <h3>Receptionist</h3>
+            <p>
+              Runs the live queue and calls patients. Sees only the last visit
+              date.
+            </p>
+          </div>
+          <div>
+            <h3>Doctor or nurse</h3>
+            <p>
+              Sees the next patient, full history and adds consultation notes.
+            </p>
+          </div>
+          <div>
+            <h3>Admin</h3>
+            <p>
+              Manages staff accounts and reads reports on visits and waiting
+              times.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta">
+        <div class="wrap">
+          <h2>Ready when you are</h2>
+          <p>Check in as a patient, or log in as clinic staff.</p>
+          <div class="actions center">
+            <a class="btn btn-green" href="login.html?next=check-in"
+              >Check in now</a
+            >
+            <a class="btn btn-line" href="login.html">Staff login</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <strong>JUAHALI</strong
+        ><span> J-PEEK CLINIC &middot; Final-year project</span>
+      </div>
+    </footer>
+  </body>
+</html>

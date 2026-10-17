@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Create account | JUAHALI</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="auth.css" />
+    <script src="auth.js" defer></script>
+  </head>
+  <body>
+    <main class="auth">
+      <aside class="auth-brand">
+        <a class="logo" href="index.html" aria-label="JUAHALI home"
+          ><svg width="34" height="34" viewBox="0 0 36 36" aria-hidden="true">
+            <rect width="36" height="36" rx="10" fill="#fff" />
+            <path
+              d="M18 10v16M10 18h16"
+              stroke="#C4232F"
+              stroke-width="3.2"
+              stroke-linecap="round"
+            /></svg
+          ><span>JUAHALI</span></a
+        >
+        <div>
+          <h1>Skip the guesswork. Check in from your phone.</h1>
+          <ul class="checks">
+            <li>Tell the clinic your symptoms before you arrive</li>
+            <li>Be placed in line by urgency</li>
+            <li>Watch your turn get closer</li>
+          </ul>
+        </div>
+        <p class="fine">Accounts made here are always patient accounts.</p>
+      </aside>
+      <section class="auth-panel">
+        <a class="logo mobile-logo" href="index.html"
+          ><svg width="34" height="34" viewBox="0 0 36 36" aria-hidden="true">
+            <rect width="36" height="36" rx="10" fill="#C4232F" />
+            <path
+              d="M18 10v16M10 18h16"
+              stroke="#fff"
+              stroke-width="3.2"
+              stroke-linecap="round"
+            /></svg
+          ><span>JUAHALI</span></a
+        >
+        <a class="back" href="index.html">Back to home</a>
+        <form id="register-form" class="card" novalidate>
+          <h2>Create your account</h2>
+          <p class="sub">
+            Use your school email so the clinic knows you are a student or staff
+            member.
+          </p>
+          <div id="form-alert" class="alert" role="alert" hidden></div>
+          <div class="field">
+            <label for="fullName">Full name</label>
+            <input
+              id="fullName"
+              name="fullName"
+              type="text"
+              autocomplete="name"
+              required
+            />
+            <p class="err" id="fullName-err"></p>
+          </div>
+          <div class="field">
+            <label for="email">School email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="username"
+              required
+            />
+            <p class="err" id="email-err"></p>
+          </div>
+          <div class="field">
+            <label for="studentId">Student ID (optional)</label>
+            <input
+              id="studentId"
+              name="studentId"
+              type="text"
+              autocomplete="off"
+            />
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <div class="pw">
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autocomplete="new-password"
+                required
+              />
+              <button
+                type="button"
+                class="pw-toggle"
+                aria-label="Show password"
+                aria-pressed="false"
+              >
+                Show
+              </button>
+            </div>
+            <ul class="rules" id="rules">
+              <li data-rule="len">At least 8 characters</li>
+              <li data-rule="letter">One letter</li>
+              <li data-rule="num">One number</li>
+            </ul>
+            <p class="err" id="password-err"></p>
+          </div>
+          <div class="field">
+            <label for="confirm">Confirm password</label>
+            <input
+              id="confirm"
+              name="confirm"
+              type="password"
+              autocomplete="new-password"
+              required
+            />
+            <p class="err" id="confirm-err"></p>
+          </div>
+          <button
+            class="btn btn-green full"
+            type="submit"
+            data-label="Create account"
+            data-busy="Creating account..."
+          >
+            <span class="btn-label">Create account</span
+            ><span class="spinner" hidden></span>
+          </button>
+          <p class="alt">
+            Already have an account? <a href="login.html">Log in</a>
+          </p>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

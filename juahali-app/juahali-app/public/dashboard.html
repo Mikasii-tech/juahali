@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Dashboard | JUAHALI</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="auth.css" />
+    <script src="dashboard.js" defer></script>
+  </head>
+  <body>
+    <main class="dash">
+      <a class="logo" href="index.html"
+        ><svg width="34" height="34" viewBox="0 0 36 36" aria-hidden="true">
+          <rect width="36" height="36" rx="10" fill="#C4232F" />
+          <path
+            d="M18 10v16M10 18h16"
+            stroke="#fff"
+            stroke-width="3.2"
+            stroke-linecap="round"
+          /></svg
+        ><span>JUAHALI</span></a
+      >
+      <h1>Hello, <span id="who">...</span></h1>
+      <p><span class="badge" id="role"></span></p>
+      <p class="sub">
+        You are logged in. This is a placeholder dashboard. Your real view
+        arrives in a later part.
+      </p>
+      <button class="btn btn-line" id="logout" type="button">Log out</button>
+    </main>
+  </body>
+</html>

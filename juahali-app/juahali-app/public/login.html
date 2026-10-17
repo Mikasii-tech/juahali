@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Log in | JUAHALI</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="auth.css" />
+    <script src="auth.js" defer></script>
+  </head>
+  <body>
+    <main class="auth">
+      <aside class="auth-brand">
+        <a class="logo" href="index.html" aria-label="JUAHALI home"
+          ><svg width="34" height="34" viewBox="0 0 36 36" aria-hidden="true">
+            <rect width="36" height="36" rx="10" fill="#fff" />
+            <path
+              d="M18 10v16M10 18h16"
+              stroke="#C4232F"
+              stroke-width="3.2"
+              stroke-linecap="round"
+            /></svg
+          ><span>JUAHALI</span></a
+        >
+        <div>
+          <h1>Welcome back. Your place in line is waiting.</h1>
+          <ul class="checks">
+            <li>See your live queue position</li>
+            <li>Get a wait estimate that updates</li>
+            <li>Review your previous visits</li>
+          </ul>
+        </div>
+        <p class="fine">Clinic staff: use the account the admin gave you.</p>
+      </aside>
+      <section class="auth-panel">
+        <a class="logo mobile-logo" href="index.html"
+          ><svg width="34" height="34" viewBox="0 0 36 36" aria-hidden="true">
+            <rect width="36" height="36" rx="10" fill="#C4232F" />
+            <path
+              d="M18 10v16M10 18h16"
+              stroke="#fff"
+              stroke-width="3.2"
+              stroke-linecap="round"
+            /></svg
+          ><span>JUAHALI</span></a
+        >
+        <a class="back" href="index.html">Back to home</a>
+        <form id="login-form" class="card" novalidate>
+          <h2>Log in</h2>
+          <p class="sub">
+            Use your school email. Clinic staff use the account the admin gave
+            them.
+          </p>
+          <div id="form-alert" class="alert" role="alert" hidden></div>
+          <div class="field">
+            <label for="email">School email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="username"
+              required
+            />
+            <p class="err" id="email-err"></p>
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <div class="pw">
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                required
+              />
+              <button
+                type="button"
+                class="pw-toggle"
+                aria-label="Show password"
+                aria-pressed="false"
+              >
+                Show
+              </button>
+            </div>
+            <p class="err" id="password-err"></p>
+          </div>
+          <button type="button" id="forgot" class="link">
+            Forgot password?
+          </button>
+          <div id="forgot-note" class="note-box" hidden>
+            Password resets are handled by the clinic admin for now. Please
+            contact the clinic desk.
+          </div>
+          <button
+            class="btn btn-green full"
+            type="submit"
+            data-label="Log in"
+            data-busy="Logging in..."
+          >
+            <span class="btn-label">Log in</span
+            ><span class="spinner" hidden></span>
+          </button>
+          <p class="alt">
+            New here? <a href="register.html">Create a patient account</a>
+          </p>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
