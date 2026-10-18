@@ -125,7 +125,14 @@
   function qcard(e) {
     const now = IDX[e.status] || 1;
     const prog =
-      { Waiting: 0.3, Called: 0.65, "In Consultation": 0.9 }[e.status] || 0.3;
+      e.status === "Waiting"
+        ? Math.min(
+            0.8,
+            0.1 + (0.7 * (e.queueSize - e.position + 1)) / e.queueSize,
+          )
+        : e.status === "Called"
+          ? 0.9
+          : 1;
     const centre =
       e.status === "Waiting"
         ? `<small>Position</small><b data-count="${e.position}">0</b>`
@@ -189,7 +196,7 @@
     const month = d.monthly[d.monthly.length - 1].count;
     view.innerHTML = `<section class="page">
       <div class="hero rise"><h1 class="big">${greet}, ${esc(S.me.fullName.split(" ")[0])}</h1><p>${new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" })}. Here is what is happening at the clinic right now.</p>
-        <div class="chips"><div class="chip"><span>Waiting now</span><b id="c-wait" data-count="${c.waiting}">0</b></div><div class="chip"><span>With the doctor</span><b id="c-cons" data-count="${c.inConsultation}">0</b></div><div class="chip"><span>Seen today</span><b id="c-done" data-count="${c.completedToday}">0</b></div><div class="chip"><span>Estimated wait if you join now</span><b><span id="c-est" data-count="${c.estWaitNewMin}">0</span> min</b></div></div></div>
+        <div class="chips"><div class="chip"><span>Waiting now</span><b id="c-wait" data-count="${c.waiting}">0</b></div><div class="chip"><span>With the doctor</span><b id="c-cons" data-count="${c.inConsultation}">0</b></div><div class="chip"><span>Seen today</span><b id="c-done" data-count="${c.completedToday}">0</b></div><div class="chip"><span>Wait if you check in as a minor case</span><b><span id="c-est" data-count="${c.estWaitNewMin}">0</span> min</b></div></div></div>
       <div id="slot" class="rise" data-i="1"></div>
       <div class="stats">
         <div class="pc stat lift rise" data-i="2"><span class="ico">${I(ICON.list)}</span><div><b data-count="${d.total}">0</b><span>Check-ins</span></div></div>
