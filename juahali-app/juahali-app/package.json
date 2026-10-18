@@ -8,7 +8,11 @@
     "seed": "node seed.js",
     "clear-queue": "node clear-queue.js",
     "simulate": "node simulate.js",
-    "demo-data": "node demo-data.js"
+    "demo-data": "node demo-data.js",
+    "test": "node --test",
+    "queue-view": "node queue-view.js",
+    "queue-demo": "node queue-demo.js",
+    "backdate": "node backdate.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
