@@ -44,6 +44,11 @@
     updated: Date.now(),
     key: "",
   };
+  const topCats = (c) => {
+    const t = c.slice(0, 5).map((x) => ({ label: x.label, value: x.count })),
+      rest = c.slice(5).reduce((a, x) => a + x.count, 0);
+    return rest ? [...t, { label: "Other", value: rest }] : t;
+  };
   const TITLES = {
     home: "Dashboard",
     checkin: "Check in",
@@ -128,7 +133,7 @@
       e.status === "Waiting"
         ? Math.min(
             0.8,
-            0.1 + (0.7 * (e.queueSize - e.position + 1)) / e.queueSize,
+            0.1 + (0.7 * (e.queueSize - e.position + 1)) / (e.queueSize || 1),
           )
         : e.status === "Called"
           ? 0.9
@@ -202,17 +207,12 @@
         <div class="pc stat lift rise" data-i="2"><span class="ico">${I(ICON.list)}</span><div><b data-count="${d.total}">0</b><span>Check-ins</span></div></div>
         <div class="pc stat lift rise" data-i="3"><span class="ico">${I(ICON.cal)}</span><div><b data-count="${month}">0</b><span>This month</span></div></div>
         <div class="pc stat lift rise" data-i="4"><span class="ico">${I(ICON.clock)}</span><div><b>${s.data.lastVisit ? fmt(s.data.lastVisit) : "None yet"}</b><span>Last visit</span></div></div>
-        <div class="pc stat lift rise" data-i="5"><span class="ico">${I(ICON.heart)}</span><div><b>${d.categories[0] ? esc(d.categories[0].label.split(" ")[0]) : "None yet"}</b><span>Most common area</span></div></div></div>
+        <div class="pc stat lift rise" data-i="5"><span class="ico">${I(ICON.heart)}</span><div><b>${d.categories[0] ? esc(d.categories[0].label.split(/[ ,]/)[0]) : "None yet"}</b><span>Most common area</span></div></div></div>
       <div class="g2"><div class="pc rise" data-i="6"><h2>Visits per month</h2>${J.bar(
         d.monthly.slice(-6).map((m) => ({ label: m.label, value: m.count })),
         { label: "Your visits per month" },
       )}</div>
-        <div class="pc rise" data-i="7"><h2>What you came for</h2>${J.donut(
-          d.categories
-            .slice(0, 5)
-            .map((x) => ({ label: x.label, value: x.count })),
-          { centerLabel: "visits" },
-        )}</div></div>
+        <div class="pc rise" data-i="7"><h2>What you came for</h2>${J.donut(topCats(d.categories), { centerLabel: "visits" })}</div></div>
       <div class="pc rise" data-i="8"><h2>Clinic activity, last 7 days</h2><p class="sub">Anonymous check-ins across the whole clinic.</p>${J.spark(
         c.activity7d.map((a) => ({ label: a.label, value: a.count })),
         { label: "Clinic check-ins over the last 7 days" },
@@ -477,12 +477,7 @@
         d.monthly.map((m) => ({ label: m.label, value: m.count })),
         { label: "Visits per month, last 12 months" },
       )}</div>
-      <div class="g2e"><div class="pc rise" data-i="3"><h2>By area</h2>${J.donut(
-        d.categories
-          .slice(0, 5)
-          .map((x) => ({ label: x.label, value: x.count })),
-        { centerLabel: "visits" },
-      )}</div>
+      <div class="g2e"><div class="pc rise" data-i="3"><h2>By area</h2>${J.donut(topCats(d.categories), { centerLabel: "visits" })}</div>
         <div class="pc rise" data-i="4"><h2>By weekday</h2>${J.bar(wd, { label: "Visits by weekday", h: 200 })}</div></div>
       <div class="pc rise" data-i="5"><h2>Clinic activity, last 7 days</h2><p class="sub">Anonymous check-ins across the whole clinic.</p>${J.spark(
         d.clinic.activity7d.map((a) => ({ label: a.label, value: a.count })),
@@ -614,7 +609,7 @@
   window.addEventListener("hashchange", show);
 
   let tick = 0;
-  setInterval(async () => {
+  const pollNow = async () => {
     tick++;
     const live = $("#live");
     try {
@@ -639,7 +634,15 @@
     } catch (e) {
       live.classList.add("off");
     }
-  }, 10000);
+  };
+  setInterval(pollNow, 10000);
+  if (window.io) {
+    try {
+      io().on("queue:changed", pollNow);
+    } catch (e) {
+      /* polling still works */
+    }
+  }
   setInterval(() => {
     const s = Math.round((Date.now() - S.updated) / 1000);
     $("#livetxt").textContent = $("#live").classList.contains("off")

@@ -1,0 +1,160 @@
+/* Extra styles for staff screens (reception now, doctor and admin later). Loaded after app.css */
+.actionbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  border-top: 6px solid var(--green);
+}
+.actionbar small {
+  color: var(--muted);
+}
+.actionbar h2 {
+  font-size: 1.6rem;
+  margin-top: 2px;
+}
+.actionbar .meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+.actionbar .btn {
+  min-height: 54px;
+  padding: 0 32px;
+  font-size: 1.05rem;
+}
+.sect {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 8px;
+}
+.sect h2 {
+  font-size: 1.2rem;
+}
+.serving {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 14px;
+}
+.scard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 6px solid var(--green);
+  box-shadow: var(--shadow);
+  animation: rise 0.4s both;
+}
+.scard small {
+  display: block;
+  color: var(--muted);
+}
+.scard b {
+  font: 800 1.3rem var(--head);
+}
+.qhead,
+.qrow {
+  display: grid;
+  grid-template-columns: 44px 1.5fr 104px 1.1fr 84px 130px 112px 96px;
+  gap: 12px;
+  align-items: center;
+}
+.qhead {
+  padding: 0 16px 10px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.qrow {
+  padding: 14px 16px;
+  border-top: 1px solid var(--line);
+  animation: rise 0.4s both;
+}
+.qrow.moved {
+  animation: flash 1.8s ease;
+}
+@keyframes flash {
+  0% {
+    background: var(--mint);
+  }
+  100% {
+    background: transparent;
+  }
+}
+.rk {
+  font: 800 1.25rem var(--head);
+  color: var(--red-t);
+}
+.nm b {
+  display: block;
+}
+.nm small {
+  color: var(--muted);
+}
+.tier {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+.t-critical {
+  background: var(--red);
+  color: #fff;
+}
+.t-severe {
+  background: var(--amber-bg);
+  color: var(--amber);
+}
+.t-moderate {
+  background: #e4ecfa;
+  color: #1f4e9a;
+}
+.t-mild {
+  background: var(--mint);
+  color: var(--green-t);
+}
+[data-theme="dark"] .t-moderate {
+  background: #16243f;
+  color: #9cc0ff;
+}
+.rule {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+.rule.crit {
+  color: var(--red-t);
+}
+.rule.ceil {
+  color: var(--amber);
+}
+.mini {
+  min-height: 38px;
+  padding: 0 16px;
+  font-size: 0.9rem;
+}
+.card-flat {
+  padding: 8px 0;
+}
+@media (max-width: 1000px) {
+  .qhead {
+    display: none;
+  }
+  .qrow {
+    grid-template-columns: 40px 1fr auto auto;
+  }
+  .qrow .hm {
+    display: none;
+  }
+}

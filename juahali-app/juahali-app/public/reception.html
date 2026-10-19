@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JUAHALI | Reception</title>
+    <script src="/theme.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/app.css" />
+    <link rel="stylesheet" href="/staff.css" />
+    <script src="/socket.io/socket.io.js" defer></script>
+    <script src="/charts.js" defer></script>
+    <script src="/reception.js" defer></script>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="side">
+        <a class="logo" href="/reception"
+          ><svg width="34" height="34" viewBox="0 0 36 36" aria-hidden="true">
+            <rect width="36" height="36" rx="10" fill="#C4232F" />
+            <path
+              d="M18 10v16M10 18h16"
+              stroke="#fff"
+              stroke-width="3.2"
+              stroke-linecap="round"
+            /></svg
+          ><span>JUAHALI</span></a
+        >
+        <nav id="nav" aria-label="Reception menu">
+          <a href="#/queue" data-r="queue"
+            ><svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path
+                d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"
+              /></svg
+            ><span>Live queue</span></a
+          >
+          <a href="#/activity" data-r="activity"
+            ><svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 7v5l3 2M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z" /></svg
+            ><span>Activity log</span></a
+          >
+        </nav>
+        <div class="side-foot">
+          <span id="savatar" class="avatar" aria-hidden="true"></span>
+          <div><b id="sname">Reception</b><small>Front desk</small></div>
+          <button
+            id="logout"
+            class="icon-btn"
+            type="button"
+            aria-label="Log out"
+            title="Log out"
+          >
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path
+                d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"
+              />
+            </svg>
+          </button>
+        </div>
+      </aside>
+      <div class="main">
+        <header class="top">
+          <a class="logo mlogo" href="/reception"
+            ><svg width="34" height="34" viewBox="0 0 36 36" aria-hidden="true">
+              <rect width="36" height="36" rx="10" fill="#C4232F" />
+              <path
+                d="M18 10v16M10 18h16"
+                stroke="#fff"
+                stroke-width="3.2"
+                stroke-linecap="round"
+              /></svg
+            ><span>JUAHALI</span></a
+          >
+          <h2 id="ptitle">Live queue</h2>
+          <div class="top-r">
+            <span id="live" class="live"
+              ><i></i><em id="livetxt">Live</em></span
+            >
+            <button
+              id="theme"
+              class="icon-btn"
+              type="button"
+              aria-label="Switch light and dark mode"
+            >
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+              </svg>
+            </button>
+            <span id="chip" class="avatar" aria-hidden="true"></span>
+          </div>
+        </header>
+        <main id="view" tabindex="-1"></main>
+      </div>
+    </div>
+    <div id="toasts" class="toasts" aria-live="polite"></div>
+  </body>
+</html>

@@ -27,6 +27,10 @@ const schema = new mongoose.Schema(
     },
     inQueue: { type: Boolean, default: true }, // becomes false when Completed or No-show (later part)
     checkInAt: { type: Date, default: Date.now },
+    calledAt: Date,
+    consultStartAt: Date,
+    completedAt: Date,
+    calledBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     pharmacyChoice: {
       type: String,
       enum: ["none", "joined_after_suggestion"],

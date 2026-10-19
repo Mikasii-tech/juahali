@@ -3,6 +3,7 @@ const QueueEntry = require("../models/QueueEntry");
 const Counter = require("../models/Counter");
 const { requireRole } = require("../middleware/auth");
 const { publicConfig, compute } = require("../services/triage");
+const { notify } = require("../services/realtime");
 
 const router = express.Router();
 router.use(requireRole("patient"));
@@ -69,6 +70,7 @@ router.post("/", async (req, res) => {
       redFlag: r.redFlag,
       pharmacyChoice: r.tier === "Mild" ? "joined_after_suggestion" : "none",
     });
+    notify();
     res.status(201).json({ entry: await view(entry) });
   } catch (e) {
     if (e.code === 11000)

@@ -1,11 +1,13 @@
 require("dns").setServers(["8.8.8.8", "1.1.1.1"]);
 require("dotenv").config();
+const http = require("http");
 const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
 const { requireRole } = require("./middleware/auth");
+const realtime = require("./services/realtime");
 
 const app = express();
 app.use(
@@ -17,6 +19,7 @@ app.use(
         styleSrc: ["'self'", "https://fonts.googleapis.com"],
         fontSrc: ["https://fonts.gstatic.com"],
         imgSrc: ["'self'", "data:"],
+        connectSrc: ["'self'", "ws:", "wss:"],
         upgradeInsecureRequests: null,
       },
     },
@@ -29,28 +32,28 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/checkin", require("./routes/checkin"));
 app.use("/api/patient", require("./routes/patient"));
+app.use("/api/reception", require("./routes/reception"));
 
-// Role-protected pages (all four use one placeholder dashboard for now)
-const dash = (req, res) =>
-  res.sendFile(path.join(__dirname, "public", "dashboard.html"));
-app.get("/patient", requireRole("patient"), (req, res) =>
-  res.sendFile(path.join(__dirname, "public", "patient.html")),
-);
-app.get("/reception", requireRole("receptionist"), dash);
-app.get("/doctor", requireRole("doctor"), dash);
-app.get("/admin", requireRole("admin"), dash);
+const page = (file) => (req, res) =>
+  res.sendFile(path.join(__dirname, "public", file));
+app.get("/patient", requireRole("patient"), page("patient.html"));
 app.get("/patient/check-in", requireRole("patient"), (req, res) =>
   res.redirect("/patient#/checkin"),
 );
+app.get("/reception", requireRole("receptionist"), page("reception.html"));
+app.get("/doctor", requireRole("doctor"), page("dashboard.html")); // real doctor dashboard arrives in a later part
+app.get("/admin", requireRole("admin"), page("dashboard.html")); // real admin dashboard arrives in a later part
 
 const PORT = process.env.PORT || 3000;
 mongoose
   .connect(process.env.MONGODB_URI)
-  .then(() =>
-    app.listen(PORT, () =>
+  .then(() => {
+    const server = http.createServer(app);
+    realtime.init(server);
+    server.listen(PORT, () =>
       console.log(`JUAHALI running on http://localhost:${PORT}`),
-    ),
-  )
+    );
+  })
   .catch((err) => {
     console.error("MongoDB connection failed:", err.message);
     process.exit(1);
