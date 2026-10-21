@@ -33,6 +33,7 @@ app.use("/api/auth", require("./routes/auth"));
 app.use("/api/checkin", require("./routes/checkin"));
 app.use("/api/patient", require("./routes/patient"));
 app.use("/api/reception", require("./routes/reception"));
+app.use("/api/doctor", require("./routes/doctor"));
 
 const page = (file) => (req, res) =>
   res.sendFile(path.join(__dirname, "public", file));
@@ -41,7 +42,7 @@ app.get("/patient/check-in", requireRole("patient"), (req, res) =>
   res.redirect("/patient#/checkin"),
 );
 app.get("/reception", requireRole("receptionist"), page("reception.html"));
-app.get("/doctor", requireRole("doctor"), page("dashboard.html")); // real doctor dashboard arrives in a later part
+app.get("/doctor", requireRole("doctor"), page("doctor.html")); // real doctor dashboard arrives in a later part
 app.get("/admin", requireRole("admin"), page("dashboard.html")); // real admin dashboard arrives in a later part
 
 const PORT = process.env.PORT || 3000;

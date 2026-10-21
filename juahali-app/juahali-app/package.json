@@ -12,7 +12,8 @@
     "test": "node --test",
     "queue-view": "node queue-view.js",
     "queue-demo": "node queue-demo.js",
-    "backdate": "node backdate.js"
+    "backdate": "node backdate.js",
+    "consult-demo": "node consult-demo.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
