@@ -4,5 +4,6 @@ module.exports = mongoose.model('Consultation', new mongoose.Schema({
   queueEntryId: { type: mongoose.Schema.Types.ObjectId, ref: 'QueueEntry', required: true, unique: true },
   patientId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
   doctorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  notes: { type: String, default: '', maxlength: 4000 }
+  notes: { type: String, default: '', maxlength: 4000 },        // private to doctors
+  advice: { type: String, default: '', maxlength: 2000 }        // written for the patient to read
 }, { timestamps: true }));

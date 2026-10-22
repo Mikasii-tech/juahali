@@ -26,13 +26,13 @@ async function detail(e) {
     Consultation.findOne({ queueEntryId: e._id }).lean()
   ]);
   const notes = await Consultation.find({ queueEntryId: { $in: past.map((x) => x._id) } }).lean();
-  const nmap = Object.fromEntries(notes.map((n) => [String(n.queueEntryId), n.notes]));
+  const nmap = Object.fromEntries(notes.map((n) => [String(n.queueEntryId), n]));
   return {
     id: e._id, queueNumber: e.queueNumber, status: e.status, name: p ? p.fullName : 'Demo patient', studentId: p ? p.studentId || '' : '',
     tier: e.severityTier, redFlag: e.redFlag, symptom: e.symptomLabel, area: e.symptomCategory, waited: mins(e.checkInAt, e.calledAt || new Date()),
-    consultStartAt: e.consultStartAt || null, notes: note ? note.notes : '',
+    consultStartAt: e.consultStartAt || null, notes: note ? note.notes : '', advice: note ? note.advice || '' : '',
     answers: (e.answers || []).map((a) => ({ q: QTEXT[a.questionId] || a.questionId, a: a.answer })),
-    history: past.map((x) => ({ date: x.checkInAt, symptom: x.symptomLabel, area: x.symptomCategory, tier: x.severityTier, outcome: x.status, notes: nmap[String(x._id)] || '' }))
+    history: past.map((x) => ({ date: x.checkInAt, symptom: x.symptomLabel, area: x.symptomCategory, tier: x.severityTier, outcome: x.status, notes: (nmap[String(x._id)] || {}).notes || '', advice: (nmap[String(x._id)] || {}).advice || '' }))
   };
 }
 
@@ -62,8 +62,11 @@ router.post('/start', async (req, res) => {
   } catch (e) { fail(res, e); }
 });
 
-async function saveNotes(entry, doctor, text) {
-  return Consultation.findOneAndUpdate({ queueEntryId: entry._id }, { $set: { notes: String(text || '').slice(0, 4000), doctorId: doctor._id, patientId: entry.patientId } }, { upsert: true, new: true });
+async function saveNotes(entry, doctor, notes, advice) {
+  const set = { doctorId: doctor._id, patientId: entry.patientId };
+  if (typeof notes === 'string') set.notes = notes.slice(0, 4000);
+  if (typeof advice === 'string') set.advice = advice.slice(0, 2000);
+  return Consultation.findOneAndUpdate({ queueEntryId: entry._id }, { $set: set }, { upsert: true, new: true });
 }
 
 router.put('/notes', async (req, res) => {
@@ -71,7 +74,7 @@ router.put('/notes', async (req, res) => {
     if (!mongoose.isValidObjectId(req.body.id)) return res.status(400).json({ message: 'Invalid patient.' });
     const e = await QueueEntry.findOne({ _id: req.body.id, inQueue: true, status: 'In Consultation' });
     if (!e) return res.status(409).json({ message: 'This consultation is not open.' });
-    await saveNotes(e, req.user, req.body.notes);
+    await saveNotes(e, req.user, req.body.notes, req.body.advice);
     res.json({ ok: true, savedAt: new Date() });
   } catch (e) { fail(res, e); }
 });
@@ -81,7 +84,7 @@ router.post('/complete', async (req, res) => {
     if (!mongoose.isValidObjectId(req.body.id)) return res.status(400).json({ message: 'Invalid patient.' });
     const e = await QueueEntry.findOne({ _id: req.body.id, inQueue: true, status: 'In Consultation' });
     if (!e) return res.status(409).json({ message: 'This consultation is not open.' });
-    await saveNotes(e, req.user, req.body.notes);
+    await saveNotes(e, req.user, req.body.notes, req.body.advice);
     send(res, await changeStatus(e._id, 'Completed', req.user));
   } catch (e) { fail(res, e); }
 });

@@ -46,10 +46,10 @@
       <div class="flags">${tier(c.tier)}${c.redFlag ? '<span class="flag">Red flag</span>' : ''}</div></div>
       <div class="kv"><div><small>Reported</small><b>${esc(c.symptom)}</b></div><div><small>Area</small><b>${esc(c.area)}</b></div><div><small>Waited</small><b>${c.waited} min</b></div></div>
       <h3>Guided answers</h3><ul class="ans">${c.answers.map((a) => `<li><span>${esc(a.q)}</span><b class="${a.a ? 'yes' : 'no'}">${a.a ? 'Yes' : 'No'}</b></li>`).join('') || '<li><span>No answers recorded.</span></li>'}</ul>
-      ${inC ? `<div class="work"><h3>Consultation notes</h3><span class="timer" id="timer">00:00</span></div><textarea id="notes" maxlength="4000" placeholder="Type your notes here. They save automatically.">${esc(c.notes)}</textarea><p class="save" id="save">Notes are private to doctors.</p>
+      ${inC ? `<div class="work"><h3>Clinical notes (private to doctors)</h3><span class="timer" id="timer">00:00</span></div><textarea id="notes" maxlength="4000" placeholder="Your clinical notes. They save automatically.">${esc(c.notes)}</textarea><div class="work"><h3>Advice for the patient (the patient can read this)</h3></div><textarea id="advice" maxlength="2000" placeholder="For example: rest, fluids, how to take the medicine, when to come back.">${esc(c.advice)}</textarea><p class="save" id="save">Both boxes save automatically.</p>
         <div class="cta2"><button class="btn btn-green" data-act="complete" type="button">Complete consultation</button></div>`
       : `<div class="cta2"><button class="btn btn-green" data-act="start" type="button">Start consultation</button></div>`}</div>`;
-    h.innerHTML = `<div class="pc hist"><h2>Patient history</h2>${c.history.length ? c.history.map((x) => `<details><summary>${fmt(x.date)} &middot; ${esc(x.symptom)}</summary><small>${esc(x.area)} &middot; ${esc(x.tier)} &middot; ${esc(x.outcome)}</small>${x.notes ? `<p>${esc(x.notes)}</p>` : '<small>No notes recorded.</small>'}</details>`).join('') : '<p class="empty">First visit. No earlier history.</p>'}</div>`;
+    h.innerHTML = `<div class="pc hist"><h2>Patient history</h2>${c.history.length ? c.history.map((x) => `<details><summary>${fmt(x.date)} &middot; ${esc(x.symptom)}</summary><small>${esc(x.area)} &middot; ${esc(x.tier)} &middot; ${esc(x.outcome)}</small>${x.notes ? `<p><b>Notes:</b> ${esc(x.notes)}</p>` : ''}${x.advice ? `<p><b>Advice given:</b> ${esc(x.advice)}</p>` : ''}${!x.notes && !x.advice ? '<small>No notes recorded.</small>' : ''}</details>`).join('') : '<p class="empty">First visit. No earlier history.</p>'}</div>`;
   }
   async function load() {
     if (S.busy) return; S.busy = true;
@@ -67,16 +67,16 @@
     const b = e.target.closest('[data-act]'); if (!b || !S.cur) return;
     b.disabled = true;
     const body = { id: S.cur.id };
-    if (b.dataset.act === 'complete') body.notes = $('#notes').value;
+    if (b.dataset.act === 'complete') { body.notes = $('#notes').value; body.advice = $('#advice').value; }
     const r = await api('/api/doctor/' + b.dataset.act, { method: 'POST', body: JSON.stringify(body) });
     if (r.ok) toast(b.dataset.act === 'start' ? 'Consultation started.' : 'Consultation completed.', 'call'); else toast(r.data.message || 'Could not do that.');
     S.busy = false; S.key = ''; load();
   });
   view.addEventListener('input', (e) => {
-    if (e.target.id !== 'notes' || !S.cur) return;
+    if ((e.target.id !== 'notes' && e.target.id !== 'advice') || !S.cur) return;
     $('#save').textContent = 'Typing...'; clearTimeout(S.saveT);
     S.saveT = setTimeout(async () => {
-      const r = await api('/api/doctor/notes', { method: 'PUT', body: JSON.stringify({ id: S.cur.id, notes: e.target.value }) });
+      const r = await api('/api/doctor/notes', { method: 'PUT', body: JSON.stringify({ id: S.cur.id, notes: $('#notes').value, advice: $('#advice').value }) });
       const s = $('#save'); if (s) s.textContent = r.ok ? 'Saved at ' + time(r.data.savedAt) : 'Could not save. Will retry when you type again.';
     }, 1200);
   });

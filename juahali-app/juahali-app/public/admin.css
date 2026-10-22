@@ -1,0 +1,24 @@
+.tbl{width:100%;border-collapse:collapse;font-size:.92rem}
+.tbl th{padding:8px 10px;text-align:left;font-size:.76rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tbl td{padding:11px 10px;border-top:1px solid var(--line)}
+.tbl .num{text-align:right;font-variant-numeric:tabular-nums}
+.scroll{overflow-x:auto}
+.cmp{display:grid;gap:16px;margin-top:14px}
+.cmp-row{display:grid;grid-template-columns:90px 1fr 130px;gap:14px;align-items:center}
+.cmp-row .bars{display:grid;gap:6px}
+.hb{height:12px;border-radius:8px;background:var(--line);overflow:hidden}
+.hb i{display:block;height:100%;width:var(--w,0%);border-radius:8px;transition:width 1s cubic-bezier(.2,.7,.2,1)}
+.hb.f i{background:#9B8486}.hb.a i{background:var(--red)}
+.cmp small{color:var(--muted)}
+.good{color:var(--green-t);font-weight:700}.bad{color:var(--amber);font-weight:700}
+.hero2{padding:20px 22px;border-radius:18px;background:var(--mint);border-left:6px solid var(--green);margin-top:14px;font-size:1.02rem}
+.legend2{display:flex;gap:16px;font-size:.85rem;color:var(--muted);margin-top:6px}
+.legend2 i{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:6px;vertical-align:-1px}
+.addform{display:grid;grid-template-columns:1.2fr 1.4fr 1fr auto;gap:12px;align-items:end}
+select{width:100%;min-height:46px;padding:0 12px;border:2px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);font:inherit}
+.urow{display:grid;grid-template-columns:1.3fr 1.5fr 110px 90px auto;gap:12px;align-items:center;padding:12px 4px;border-top:1px solid var(--line)}
+.urow small{color:var(--muted)}
+.acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.secret{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 18px;border-radius:16px;background:var(--amber-bg);border-left:6px solid var(--amber)}
+.secret code{font:700 1.15rem monospace;letter-spacing:.04em}
+@media (max-width:1000px){.addform{grid-template-columns:1fr 1fr}.urow{grid-template-columns:1fr auto}.urow .hm{display:none}.cmp-row{grid-template-columns:1fr}}
