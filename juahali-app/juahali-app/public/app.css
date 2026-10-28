@@ -183,3 +183,4 @@ details[open] summary::after{transform:rotate(45deg)}details p{padding:0 0 14px;
 
 .mt{margin-top:16px}
 .pc.top-line{border-top:6px solid var(--red)}
+.stat b > span { font: inherit; color: inherit; }

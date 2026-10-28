@@ -7,7 +7,7 @@
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const el = (tag, cls, txt) => { const n = document.createElement(tag); if (cls) n.className = cls; if (txt != null) n.textContent = txt; return n; };
   const r1 = (x) => (Math.round(x * 10) / 10).toFixed(1);
-  const TITLES = { reports: 'Reports', users: 'Users' };
+  const TITLES = { reports: 'Reports', users: 'Users', ai: 'AI model' };
   const route = () => { const r = location.hash.replace('#/', ''); return TITLES[r] ? r : 'reports'; };
   const S = { days: 7, tiers: [], q: '', role: '' };
   const sk = () => '<section class="page"><div class="sk h1"></div><div class="sk h3"></div></section>';
@@ -108,11 +108,52 @@
     });
   }
 
+
+  /* ---------- AI model (wait-time predictor) ---------- */
+  const nice = (n) => n.startsWith('tier:') ? n.slice(5) + ' cases (compared with Mild)' : n.startsWith('area:') ? n.slice(5) + ' (compared with skin, eyes and other)' : n === 'afternoon' ? 'Seen after 13:00' : 'Later in the day (per 6 hours)';
+  async function ai() {
+    view.innerHTML = sk();
+    const r = await api('/api/admin/ai/wait');
+    if (!r.ok) { view.innerHTML = '<section class="page"><div class="pc"><h2>Could not load the AI page.</h2></div></section>'; return; }
+    const d = r.data, m = d.model, x = m && m.metrics;
+    const status = !m ? 'Not trained' : m.enabled ? 'On' : 'Off';
+    const max = x ? Math.max(x.maeModel, x.maeBaseline, 0.01) : 1;
+    const coef = m ? m.coefficients.filter((c) => c.name !== 'bias') : [];
+    const cmax = Math.max(0.01, ...coef.map((c) => Math.abs(c.weight)));
+    view.innerHTML = `<section class="page">
+      <div class="pc rise"><div class="pat-head"><div><small>Wait-time predictor</small><h2>Learns how long each consultation takes</h2><p class="sub">It predicts the length of each patient ahead of you from their urgency tier, area and time of day, then adds them up. It only changes the <b>wait estimate</b>. It never changes who is called first.</p></div><span class="badge ${m && m.enabled ? 'ok' : ''}">${status}</span></div>
+        <div class="cta2"><button id="train" class="btn btn-green" type="button">Train on current data</button>${m ? `<button id="tog" class="btn btn-line" type="button">${m.enabled ? 'Switch AI estimates off' : 'Switch AI estimates on'}</button>` : ''}</div>
+        <p class="save">${d.available} finished consultations available (at least ${d.min} needed). ${d.synthetic ? `<b>${d.synthetic} of them are synthetic demo data.</b>` : 'All are real.'}</p></div>
+      ${m ? `<div class="pc rise" data-i="1"><h2>How accurate is it?</h2>
+        <p class="sub">Trained on the earlier ${m.nTrain} consultations, then tested on the latest ${m.nTest} that it had never seen. Lower error is better.</p>
+        ${m.syntheticShare > 0.2 ? `<div class="msg">${Math.round(m.syntheticShare * 100)}% of the data is synthetic. These results show that the method works, not how accurate it is in the real clinic.</div>` : ''}
+        <div class="hero2">AI error is <b>${Math.abs(Math.round(x.improvement * 100))}% ${x.improvement >= 0 ? 'lower' : 'higher'}</b> than the current rolling average.</div>
+        <div class="cmp"><div class="cmp-row"><div><b>AI model</b></div><div class="bars"><div class="hb a"><i data-w="${(x.maeModel / max) * 100}"></i></div></div><div><small>Average error</small><br><b>${r1(x.maeModel)} min</b></div></div>
+        <div class="cmp-row"><div><b>Rolling average</b></div><div class="bars"><div class="hb f"><i data-w="${(x.maeBaseline / max) * 100}"></i></div></div><div><small>Average error</small><br><b>${r1(x.maeBaseline)} min</b></div></div></div>
+        <p class="save">Trained ${new Date(m.trainedAt).toLocaleString('en-GB')}. Average error means how many minutes off the prediction is, on average.</p></div>
+        <div class="pc rise" data-i="2"><h2>What it learned</h2><p class="sub">Extra minutes the model adds to a consultation. Nothing is hidden: these are all of its numbers.</p>
+        <div class="cmp">${coef.map((c) => `<div class="cmp-row"><div class="sub">${esc(nice(c.name))}</div><div class="bars"><div class="hb ${c.weight >= 0 ? 'a' : 'f'}"><i data-w="${(Math.abs(c.weight) / cmax) * 100}"></i></div></div><div><b class="${c.weight >= 0 ? 'bad' : 'good'}">${c.weight >= 0 ? '+' : '-'}${r1(Math.abs(c.weight))} min</b></div></div>`).join('')}</div></div>` : ''}
+      <div class="pc rise" data-i="3"><h2>Safety rules</h2><ul class="tips"><li>The AI only affects the wait estimate shown to patients. Who is called next is decided by the urgency engine.</li><li>Predictions are always kept between 2 and 60 minutes.</li><li>If the model is off or missing, the system uses the rolling average, as before.</li><li>Patients see "AI-assisted estimate" next to the figure, so nothing is hidden.</li></ul></div></section>`;
+    J.animate(view);
+    $$('.hb i', view).forEach((i) => requestAnimationFrame(() => requestAnimationFrame(() => i.style.setProperty('--w', i.dataset.w + '%'))));
+    $('#train').addEventListener('click', async (e) => {
+      e.target.disabled = true; e.target.textContent = 'Training...';
+      const t = await api('/api/admin/ai/wait/train', { method: 'POST' });
+      if (t.ok) toast('Model trained.', 'call'); else toast(t.data.message || 'Could not train.');
+      ai();
+    });
+    const tog = $('#tog'); if (tog) tog.addEventListener('click', async () => {
+      const t = await api('/api/admin/ai/wait/enable', { method: 'POST', body: JSON.stringify({ enabled: !m.enabled }) });
+      if (t.ok) toast(t.data.enabled ? 'AI estimates are on.' : 'AI estimates are off.', 'call'); else toast(t.data.message || 'Could not change it.');
+      ai();
+    });
+  }
+
   /* ---------- Shell ---------- */
   function show() {
     const r = route(); $('#ptitle').textContent = TITLES[r];
     $$('#nav a').forEach((a) => { if (a.dataset.r === r) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
-    Promise.resolve(r === 'reports' ? reports() : users()).catch(() => { view.innerHTML = '<section class="page"><div class="pc"><h2>Something went wrong.</h2></div></section>'; });
+    Promise.resolve(r === 'reports' ? reports() : r === 'ai' ? ai() : users()).catch(() => { view.innerHTML = '<section class="page"><div class="pc"><h2>Something went wrong.</h2></div></section>'; });
     window.scrollTo({ top: 0 });
   }
   async function logout() { await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' }); location.href = '/login.html'; }

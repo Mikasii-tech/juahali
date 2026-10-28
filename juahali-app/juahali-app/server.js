@@ -35,6 +35,7 @@ app.use("/api/patient", require("./routes/patient"));
 app.use("/api/reception", require("./routes/reception"));
 app.use("/api/doctor", require("./routes/doctor"));
 app.use("/api/admin", require("./routes/admin"));
+app.use("/api/admin/ai", require("./routes/adminai"));
 
 const page = (file) => (req, res) =>
   res.sendFile(path.join(__dirname, "public", file));

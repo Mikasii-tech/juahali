@@ -14,7 +14,9 @@
     "queue-demo": "node queue-demo.js",
     "backdate": "node backdate.js",
     "consult-demo": "node consult-demo.js",
-    "report-demo": "node report-demo.js"
+    "report-demo": "node report-demo.js",
+    "ai-demo-data": "node ai-demo-data.js",
+    "ai-train": "node ai-train.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
