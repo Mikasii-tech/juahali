@@ -22,3 +22,11 @@ select{width:100%;min-height:46px;padding:0 12px;border:2px solid var(--line);bo
 .secret{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 18px;border-radius:16px;background:var(--amber-bg);border-left:6px solid var(--amber)}
 .secret code{font:700 1.15rem monospace;letter-spacing:.04em}
 @media (max-width:1000px){.addform{grid-template-columns:1fr 1fr}.urow{grid-template-columns:1fr auto}.urow .hm{display:none}.cmp-row{grid-template-columns:1fr}}
+.pat-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.pat-head>div{flex:1;min-width:260px}
+.pat-head small{color:var(--muted)}.pat-head h2{font-size:1.5rem;margin-top:2px}
+.cta2{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.cta2 .btn{min-height:52px;padding:0 28px}
+.save{font-size:.88rem;color:var(--muted);margin-top:14px}
+.cmp-row{grid-template-columns:130px 1fr 130px}
+.cmp.wide .cmp-row{grid-template-columns:minmax(150px,260px) 1fr 90px}
